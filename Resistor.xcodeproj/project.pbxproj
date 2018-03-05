@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A99FAED204D7365005DCCD6 /* resistor_model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 0A99FAEC204D7364005DCCD6 /* resistor_model.mlmodel */; };
 		0AA81104204D3FB100250783 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA81103204D3FB100250783 /* AppDelegate.swift */; };
 		0AA81106204D3FB100250783 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AA81105204D3FB100250783 /* ViewController.swift */; };
 		0AA81109204D3FB100250783 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AA81107204D3FB100250783 /* Main.storyboard */; };
 		0AA8110C204D3FB100250783 /* Resistor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8110A204D3FB100250783 /* Resistor.xcdatamodeld */; };
 		0AA8110E204D3FB100250783 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AA8110D204D3FB100250783 /* Assets.xcassets */; };
 		0AA81111204D3FB100250783 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AA8110F204D3FB100250783 /* LaunchScreen.storyboard */; };
+		1C25CDDD204D82360015C410 /* resistor_model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1C25CDDC204D82360015C410 /* resistor_model.mlmodel */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,7 +34,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A99FAEC204D7364005DCCD6 /* resistor_model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; name = resistor_model.mlmodel; path = ../../../Downloads/resistor_model.mlmodel; sourceTree = "<group>"; };
 		0AA81100204D3FB100250783 /* Resistor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Resistor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AA81103204D3FB100250783 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0AA81105204D3FB100250783 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -45,6 +44,7 @@
 		0AA81112204D3FB100250783 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AA81117204D3FB100250783 /* ResistorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResistorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AA81122204D3FB100250783 /* ResistorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResistorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C25CDDC204D82360015C410 /* resistor_model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = resistor_model.mlmodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,7 +93,7 @@
 		0AA81102204D3FB100250783 /* Resistor */ = {
 			isa = PBXGroup;
 			children = (
-				0A99FAEC204D7364005DCCD6 /* resistor_model.mlmodel */,
+				1C25CDDC204D82360015C410 /* resistor_model.mlmodel */,
 				0AA81103204D3FB100250783 /* AppDelegate.swift */,
 				0AA81105204D3FB100250783 /* ViewController.swift */,
 				0AA81107204D3FB100250783 /* Main.storyboard */,
@@ -239,8 +239,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C25CDDD204D82360015C410 /* resistor_model.mlmodel in Sources */,
 				0AA8110C204D3FB100250783 /* Resistor.xcdatamodeld in Sources */,
-				0A99FAED204D7365005DCCD6 /* resistor_model.mlmodel in Sources */,
 				0AA81106204D3FB100250783 /* ViewController.swift in Sources */,
 				0AA81104204D3FB100250783 /* AppDelegate.swift in Sources */,
 			);
