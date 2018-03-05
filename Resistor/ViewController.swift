@@ -12,7 +12,7 @@ import Vision
 import SceneKit
 import ARKit
 
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, ARSCNViewDelegate {
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var debugTextView: UITextView!
     @IBOutlet weak var cameraView: UIView!
@@ -224,6 +224,27 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 			}
 		}
 	}
+    
+    @IBAction func pinch(_ sender: UIPinchGestureRecognizer) {
+        let device: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+        if sender.state == .changed {
+            
+            let maxZoomFactor = device.activeFormat.videoMaxZoomFactor
+            let pinchVelocityDividerFactor: CGFloat = 1.0
+            
+            do {
+                
+                try device.lockForConfiguration()
+                defer { device.unlockForConfiguration() }
+                
+                let desiredZoomFactor = device.videoZoomFactor + atan2(sender.velocity, pinchVelocityDividerFactor)
+                device.videoZoomFactor = max(1.0, min(desiredZoomFactor, maxZoomFactor))
+                
+            } catch {
+                print(error)
+            }
+        }
+    }
 
 }
 

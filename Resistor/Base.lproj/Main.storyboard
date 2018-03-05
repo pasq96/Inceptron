@@ -21,6 +21,10 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K2R-UJ-SvW" userLabel="Camera View">
                                 <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="iIz-Tp-hJY" appends="YES" id="RRW-zl-A34"/>
+                                </connections>
                             </view>
                             <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dca-oh-KFV">
                                 <rect key="frame" x="67" y="279" width="240" height="109"/>
@@ -62,6 +66,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <pinchGestureRecognizer id="iIz-Tp-hJY">
+                    <connections>
+                        <action selector="pinch:" destination="BYZ-38-t0r" id="Lzh-9v-1yg"/>
+                    </connections>
+                </pinchGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="476" y="133.5832083958021"/>
         </scene>
