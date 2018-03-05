@@ -122,9 +122,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Dispose of any resources that can be recreated.
     }
     
+    
+    var c = 0
+    var c1 = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
         //richiamato per ogni frame
+        
+        c += 1
         
         guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
@@ -133,24 +138,29 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
         let uiImage = UIImage(cgImage: cgImage!)
         /*
-        DispatchQueue.main.async { [unowned self] in
-            self.imageView.image = uiImage
-        }
-        */
- 
+         DispatchQueue.main.async { [unowned self] in
+         self.imageView.image = uiImage
+         }
+         */
         
-        // Prepare CoreML/Vision Request
-        let imageRequestHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
-        
-        // Run Vision Image Request
-        do {
-            try imageRequestHandler.perform(self.visionRequests)
-        } catch {
-            print(error)
+        if(c >= 10){
+            c1 += 1
+            print("entrato \(c1)")
+            // Prepare CoreML/Vision Request
+            let imageRequestHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+            
+            // Run Vision Image Request
+            do {
+                try imageRequestHandler.perform(self.visionRequests)
+            } catch {
+                print(error)
+            }
+            c = 0;
         }
+        
         
     }
-
+    
     
     
     
@@ -189,41 +199,46 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // Only display a prediction if confidence is above 1%
             let topPredictionScore:Float? = Float(topPrediction.components(separatedBy: ":")[1].trimmingCharacters(in: .whitespaces))
             if (topPredictionScore != nil && topPredictionScore! > 0.01) {
-                if (topPredictionName == "resistenza") { symbol = "👊" }
+                if (topPredictionName == "resistenza" && topPredictionScore! > 0.40) { symbol = "👊"
+                    self.highlightView?.layer.borderColor = UIColor.green.cgColor
+                }else{
+                    self.highlightView?.layer.borderColor = UIColor.red.cgColor
+                }
                 if (topPredictionName == "noresistenza") { symbol = "🖐" }
             }
             
-//            self.textOverlay.text = symbol
+            //            self.textOverlay.text = symbol
             
         }
     }
-	
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		let screenSize = cameraView.bounds.size
-		if let touchPoint = touches.first {
-			let x = touchPoint.location(in: cameraView).y / screenSize.height
-			let y = 1.0 - touchPoint.location(in: cameraView).x / screenSize.width
-			let focusPoint = CGPoint(x: x, y: y)
-			
-			let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
-			if let device = captureDevice {
-				do {
-					try device.lockForConfiguration()
-					
-					device.focusPointOfInterest = focusPoint
-					//device.focusMode = .continuousAutoFocus
-					device.focusMode = .autoFocus
-					//device.focusMode = .locked
-					device.exposurePointOfInterest = focusPoint
-					device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
-					device.unlockForConfiguration()
-				}
-				catch {
-					// just ignore
-				}
-			}
-		}
-	}
+    
+//    messa a fuoco
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let screenSize = cameraView.bounds.size
+        if let touchPoint = touches.first {
+            let x = touchPoint.location(in: cameraView).y / screenSize.height
+            let y = 1.0 - touchPoint.location(in: cameraView).x / screenSize.width
+            let focusPoint = CGPoint(x: x, y: y)
+            
+            let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)
+            if let device = captureDevice {
+                do {
+                    try device.lockForConfiguration()
+                    
+                    device.focusPointOfInterest = focusPoint
+                    //device.focusMode = .continuousAutoFocus
+                    device.focusMode = .autoFocus
+                    //device.focusMode = .locked
+                    device.exposurePointOfInterest = focusPoint
+                    device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
+                    device.unlockForConfiguration()
+                }
+                catch {
+                    // just ignore
+                }
+            }
+        }
+    }
     
 	var pivotPinchScale: CGFloat!
 	
