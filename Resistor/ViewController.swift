@@ -97,9 +97,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Start video capture.
         captureSession.startRunning()
-        self.highlightView?.center = view.center
-        
-        
+       self.highlightView?.center = view.center
+		
+	
 //        debugTextView.bringSubview(toFront: imageView)
         
         //orientamento dell'immagine
@@ -134,20 +134,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
         let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
-        
-        let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
-        let uiImage = UIImage(cgImage: cgImage!)
+		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
+		
+//		let cgimage : UIImage = self.convert(cmage: ciImage)
+		
+		
         /*
          DispatchQueue.main.async { [unowned self] in
          self.imageView.image = uiImage
          }
          */
-        
+		
+		
         if(c >= 10){
             c1 += 1
             print("entrato \(c1)")
             // Prepare CoreML/Vision Request
-            let imageRequestHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+			let imageRequestHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
             
             // Run Vision Image Request
             do {
@@ -160,9 +163,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         
     }
-    
-    
-    
+	
+//	// Convert CIImage to CGImage
+//	func convert(cmage:CIImage) -> UIImage
+//	{
+//		let context:CIContext = CIContext.init(options: nil)
+//		let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent)!
+//		let image:UIImage = UIImage.init(cgImage: cgImage)
+//		return image
+//	}
+
     
     // MARK: - MACHINE LEARNING
     
@@ -193,7 +203,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.debugTextView.text = "TOP 3 PROBABILITIES: \n" + classifications
             
             // Display Top Symbol
-            var symbol = "❎"
+           var symbol = "❎"
             let topPrediction = classifications.components(separatedBy: "\n")[0]
             let topPredictionName = topPrediction.components(separatedBy: ":")[0].trimmingCharacters(in: .whitespaces)
             // Only display a prediction if confidence is above 1%
@@ -250,7 +260,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				case .began:
 					self.pivotPinchScale = device.videoZoomFactor
 				case .changed:
-					var factor = self.pivotPinchScale * sender.scale
+					var factor = self.pivotPinchScale * (sender.scale * 1.2)
 					factor = max(1, min(factor, device.activeFormat.videoMaxZoomFactor))
 					device.videoZoomFactor = factor
 				default:
