@@ -225,26 +225,27 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		}
 	}
     
-    @IBAction func pinch(_ sender: UIPinchGestureRecognizer) {
-        let device: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
-        if sender.state == .changed {
-            
-            let maxZoomFactor = device.activeFormat.videoMaxZoomFactor
-            let pinchVelocityDividerFactor: CGFloat = 1.0
-            
-            do {
-                
-                try device.lockForConfiguration()
-                defer { device.unlockForConfiguration() }
-                
-                let desiredZoomFactor = device.videoZoomFactor + atan2(sender.velocity, pinchVelocityDividerFactor)
-                device.videoZoomFactor = max(1.0, min(desiredZoomFactor, maxZoomFactor))
-                
-            } catch {
-                print(error)
-            }
-        }
-    }
-
+	var pivotPinchScale: CGFloat!
+	
+	@IBAction func pinchToZoom(_ sender: UIPinchGestureRecognizer) {
+			let device: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+			do {
+				try device.lockForConfiguration()
+				switch sender.state {
+				case .began:
+					self.pivotPinchScale = device.videoZoomFactor
+				case .changed:
+					var factor = self.pivotPinchScale * sender.scale
+					factor = max(1, min(factor, device.activeFormat.videoMaxZoomFactor))
+					device.videoZoomFactor = factor
+				default:
+					break
+				}
+				device.unlockForConfiguration()
+			} catch {
+				// handle exception
+			}
+		}
+	
 }
 
