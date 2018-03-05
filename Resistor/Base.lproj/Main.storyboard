@@ -26,11 +26,6 @@
                                     <outletCollection property="gestureRecognizers" destination="iIz-Tp-hJY" appends="YES" id="RRW-zl-A34"/>
                                 </connections>
                             </view>
-                            <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dca-oh-KFV">
-                                <rect key="frame" x="67" y="279" width="240" height="109"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzF-hW-ERw">
                                 <rect key="frame" x="0.0" y="64" width="375" height="100"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -45,16 +40,28 @@
                                 <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="10"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dca-oh-KFV">
+                                <rect key="frame" x="67" y="275" width="240" height="109"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8gY-ki-I93">
+                                <rect key="frame" x="58" y="441" width="200" height="150"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="K2R-UJ-SvW" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="1M2-N3-Eho"/>
                             <constraint firstItem="K2R-UJ-SvW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="426-cr-S82"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Dca-oh-KFV" secondAttribute="bottom" constant="279" id="Swb-4I-4Ke"/>
                             <constraint firstItem="pzF-hW-ERw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="T1c-up-YxT"/>
+                            <constraint firstItem="Dca-oh-KFV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="67" id="cJU-SY-3Ya"/>
                             <constraint firstItem="pzF-hW-ERw" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="cRg-FG-36H"/>
+                            <constraint firstItem="Dca-oh-KFV" firstAttribute="centerX" secondItem="pzF-hW-ERw" secondAttribute="centerX" id="hIu-QU-Tnv"/>
                             <constraint firstItem="K2R-UJ-SvW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="hwb-7c-LhO"/>
                             <constraint firstItem="pzF-hW-ERw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="iuz-8O-frQ"/>
                             <constraint firstItem="K2R-UJ-SvW" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="t39-GT-MFK"/>
+                            <constraint firstItem="Dca-oh-KFV" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="tDd-ua-PzA"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -63,6 +70,7 @@
                         <outlet property="cameraView" destination="K2R-UJ-SvW" id="qsy-h6-aIe"/>
                         <outlet property="debugTextView" destination="pzF-hW-ERw" id="1oH-HP-Tk8"/>
                         <outlet property="highlightView" destination="Dca-oh-KFV" id="dbW-ul-yd3"/>
+                        <outlet property="imageViewCropped" destination="8gY-ki-I93" id="R86-an-xSr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

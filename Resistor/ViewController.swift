@@ -20,7 +20,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     {
         didSet {
             self.highlightView?.layer.borderColor = UIColor.red.cgColor
-            self.highlightView?.layer.borderWidth = 4
+            self.highlightView?.layer.borderWidth = 3
             self.highlightView?.backgroundColor = .clear
         }
     }
@@ -121,9 +121,25 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+	
+	func getImageFromSampleBuffer (buffer:CMSampleBuffer) -> CGImage? {
+		if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
+			let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+			let position = CGPoint(x: UIScreen.main.bounds.midX*1.25 ,y: UIScreen.main.bounds.midY*1.45)
+			let rect = CGRect(origin: position, size: CGSize(width: 450.0, height: 250.0))
+			let cropped = ciImage.cropped(to: rect)
+			
+			let context = CIContext()
+			if let image = context.createCGImage(cropped, from: cropped.extent) {
+				return image
+			}
+		}
+		return nil
+	}
     
-    
-    var c = 0
+
+	@IBOutlet weak var imageViewCropped: UIImageView!
+	var c = 0
     var c1 = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
@@ -133,24 +149,26 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-        let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
-		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
+//        let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
+//		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
 		
-//		let cgimage : UIImage = self.convert(cmage: ciImage)
+		let croppedCGI = getImageFromSampleBuffer(buffer: sampleBuffer)
+		
+		let croppedCII = CIImage(cgImage: croppedCGI!)
 		
 		
-        /*
-         DispatchQueue.main.async { [unowned self] in
-         self.imageView.image = uiImage
-         }
-         */
+//         DispatchQueue.main.async { [unowned self] in
+//         self.imageViewCropped.image = self.convert(cmage: croppedCII)
+//		 self.imageViewCropped.center = self.view.center
+//         }
+//
 		
 		
         if(c >= 10){
             c1 += 1
             print("entrato \(c1)")
             // Prepare CoreML/Vision Request
-			let imageRequestHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])
+			let imageRequestHandler = VNImageRequestHandler(ciImage: croppedCII, options: [:])
             
             // Run Vision Image Request
             do {
@@ -164,14 +182,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
 	
-//	// Convert CIImage to CGImage
-//	func convert(cmage:CIImage) -> UIImage
-//	{
-//		let context:CIContext = CIContext.init(options: nil)
-//		let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent)!
-//		let image:UIImage = UIImage.init(cgImage: cgImage)
-//		return image
-//	}
+	// Convert CIImage to CGImage
+	func convert(cmage:CIImage) -> UIImage
+	{
+		let context:CIContext = CIContext.init(options: nil)
+		let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent)!
+		let image:UIImage = UIImage.init(cgImage: cgImage)
+		return image
+	}
 
     
     // MARK: - MACHINE LEARNING
@@ -209,9 +227,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // Only display a prediction if confidence is above 1%
             let topPredictionScore:Float? = Float(topPrediction.components(separatedBy: ":")[1].trimmingCharacters(in: .whitespaces))
             if (topPredictionScore != nil && topPredictionScore! > 0.01) {
-                if (topPredictionName == "resistenza" && topPredictionScore! > 0.40) { symbol = "👊"
+                if (topPredictionName == "resistenza" && topPredictionScore! > 0.40)
+				{ symbol = "👊"
                     self.highlightView?.layer.borderColor = UIColor.green.cgColor
-                }else{
+                }
+				else{
                     self.highlightView?.layer.borderColor = UIColor.red.cgColor
                 }
                 if (topPredictionName == "noresistenza") { symbol = "🖐" }
