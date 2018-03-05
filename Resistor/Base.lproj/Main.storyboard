@@ -68,7 +68,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <pinchGestureRecognizer id="iIz-Tp-hJY">
                     <connections>
-                        <action selector="pinch:" destination="BYZ-38-t0r" id="Lzh-9v-1yg"/>
+                        <action selector="pinchToZoom:" destination="BYZ-38-t0r" id="fmF-GT-Zmb"/>
                     </connections>
                 </pinchGestureRecognizer>
             </objects>
