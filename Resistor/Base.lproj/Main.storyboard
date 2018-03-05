@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="VKb-UW-na7">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--PISELLO-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Resistor" customModuleProvider="target" sceneMemberID="viewController">
@@ -18,43 +18,70 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="pzF-hW-ERw">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K2R-UJ-SvW" userLabel="Camera View">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </view>
+                            <view opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Dca-oh-KFV">
+                                <rect key="frame" x="67" y="279" width="240" height="109"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pzF-hW-ERw">
+                                <rect key="frame" x="0.0" y="64" width="375" height="100"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="CUz-mO-goA"/>
+                                    <constraint firstAttribute="height" constant="100" id="2H7-MA-Hx6"/>
                                 </constraints>
                                 <string key="text">Basic Gesture Recognition 101 
 1
 2
 3</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" red="1" green="0.14913141730000001" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="10"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="tNu-g1-MsH">
-                                <rect key="frame" x="0.0" y="100" width="375" height="567"/>
-                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="tNu-g1-MsH" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="2F9-Ik-HxN"/>
-                            <constraint firstItem="pzF-hW-ERw" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="81P-ph-dze"/>
+                            <constraint firstItem="K2R-UJ-SvW" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="1M2-N3-Eho"/>
+                            <constraint firstItem="K2R-UJ-SvW" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="426-cr-S82"/>
                             <constraint firstItem="pzF-hW-ERw" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="T1c-up-YxT"/>
-                            <constraint firstItem="tNu-g1-MsH" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="Td9-U6-E8A"/>
                             <constraint firstItem="pzF-hW-ERw" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="cRg-FG-36H"/>
-                            <constraint firstItem="tNu-g1-MsH" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="iSM-uO-qSk"/>
-                            <constraint firstItem="tNu-g1-MsH" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="100" id="ulE-Lu-eUc"/>
+                            <constraint firstItem="K2R-UJ-SvW" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="hwb-7c-LhO"/>
+                            <constraint firstItem="pzF-hW-ERw" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="iuz-8O-frQ"/>
+                            <constraint firstItem="K2R-UJ-SvW" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="t39-GT-MFK"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="PISELLO" id="0M9-WX-tK7"/>
                     <connections>
+                        <outlet property="cameraView" destination="K2R-UJ-SvW" id="qsy-h6-aIe"/>
                         <outlet property="debugTextView" destination="pzF-hW-ERw" id="1oH-HP-Tk8"/>
-                        <outlet property="imageView" destination="tNu-g1-MsH" id="Jz8-lJ-uEQ"/>
+                        <outlet property="highlightView" destination="Dca-oh-KFV" id="dbW-ul-yd3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
+            <point key="canvasLocation" x="476" y="133.5832083958021"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="EHU-1I-LVY">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VKb-UW-na7" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="NuJ-ch-lPW">
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="U7p-AL-7dw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iF4-cG-NJi" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-322" y="134"/>
         </scene>
     </scenes>
 </document>

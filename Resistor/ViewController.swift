@@ -15,7 +15,15 @@ import ARKit
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate, ARSCNViewDelegate {
     
     @IBOutlet weak var debugTextView: UITextView!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var cameraView: UIView!
+    @IBOutlet private weak var highlightView: UIView!
+    {
+        didSet {
+            self.highlightView?.layer.borderColor = UIColor.red.cgColor
+            self.highlightView?.layer.borderWidth = 4
+            self.highlightView?.backgroundColor = .clear
+        }
+    }
     
     private lazy var captureSession: AVCaptureSession = {
         let session = AVCaptureSession()
@@ -28,6 +36,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return session
     }()
     
+    private lazy var cameraLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
+    
     var videoPreviewLayer:AVCaptureVideoPreviewLayer?
     
     var visionRequests = [VNRequest]()
@@ -37,8 +47,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        
+
         // --- ARKIT ---
         /*
         // Set the view's delegate
@@ -53,6 +62,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Set the scene to the view
         sceneView.scene = scene
         */
+        
+        
+        // hide the red focus area on load
+//        self.highlightView?.frame = .zero
+        
+        // make the camera appear on the screen
+        self.cameraView?.layer.addSublayer(self.cameraLayer)
+        
+        
         let output = AVCaptureVideoDataOutput()
         output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "queue"))
         captureSession.addOutput(output)
@@ -79,9 +97,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Start video capture.
         captureSession.startRunning()
+        self.highlightView?.center = view.center
         
         
-        debugTextView.bringSubview(toFront: imageView)
+//        debugTextView.bringSubview(toFront: imageView)
         
         //orientamento dell'immagine
         guard let connection = output.connection(with: AVFoundation.AVMediaType.video) else { return }
@@ -89,6 +108,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         guard connection.isVideoMirroringSupported else { return }
         connection.videoOrientation = .portrait
         connection.isVideoMirrored = AVCaptureDevice.Position.back == .front
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // make sure the layer is the correct size
+        self.cameraLayer.frame = self.cameraView?.bounds ?? .zero
     }
 
     override func didReceiveMemoryWarning() {
@@ -106,11 +132,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
         let uiImage = UIImage(cgImage: cgImage!)
+        /*
         DispatchQueue.main.async { [unowned self] in
             self.imageView.image = uiImage
         }
-        
-        print("chiamato")
+        */
  
         
         // Prepare CoreML/Vision Request
