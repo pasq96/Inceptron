@@ -12,6 +12,7 @@ import Vision
 import SceneKit
 import ARKit
 
+
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     @IBOutlet weak var debugTextView: UITextView!
@@ -43,6 +44,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var visionRequests = [VNRequest]()
     
     private let context = CIContext()
+    
+    var viewWidth: CGFloat!
+    var viewHeight: CGFloat!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -97,10 +101,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Start video capture.
         captureSession.startRunning()
-       self.highlightView?.center = view.center
+//        self.highlightView?.center = view.center
 		
 	
-//        debugTextView.bringSubview(toFront: imageView)
+//      debugTextView.bringSubview(toFront: imageView)
         
         //orientamento dell'immagine
         guard let connection = output.connection(with: AVFoundation.AVMediaType.video) else { return }
@@ -108,6 +112,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         guard connection.isVideoMirroringSupported else { return }
         connection.videoOrientation = .portrait
         connection.isVideoMirrored = AVCaptureDevice.Position.back == .front
+ 
+/*
+        let viewWidth = highlightView.frame.width
+        let viewHeight = highlightView.frame.height
+        
+        let rect = CGRect(x: uiImage.size.width/2, y: uiImage.size.height/2, width: viewWidth, height: viewHeight)
+ */
+        viewWidth = highlightView.bounds.width * UIScreen.main.scale //* highlightView.transform.a
+        viewHeight = highlightView.bounds.height * UIScreen.main.scale //* highlightView.transform.d
     }
     
     override func viewDidLayoutSubviews() {
@@ -123,50 +136,60 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 	
 	func getImageFromSampleBuffer (buffer:CMSampleBuffer) -> CGImage? {
-		if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
-			let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-			let position = CGPoint(x: UIScreen.main.bounds.midX*1.25 ,y: UIScreen.main.bounds.midY*1.45)
-			let rect = CGRect(origin: position, size: CGSize(width: 450.0, height: 250.0))
-			let cropped = ciImage.cropped(to: rect)
+        
+        if(viewHeight == nil) { return nil }
+		
+        if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
+
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+            
+            let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
+            let uiImage = UIImage(cgImage: cgImage!)
+
+//          let position = CGPoint(x: UIScreen.main.bounds.midX*1.25 ,y: UIScreen.main.bounds.midY*1.45)
+//          let rect = CGRect(origin: position, size: CGSize(width: 450.0, height: 250.0))
+
+//          print(UIScreen.main.scale)
+//          print("altezza: \(viewHeight) larghezza: \(viewWidth)")
+            
+            let rect = CGRect(x: (uiImage.size.width - viewWidth) / 2, y: (uiImage.size.height - viewHeight / 2) / 2, width: viewWidth, height: viewHeight)
+ 
+            let cropped = ciImage.cropped(to: rect)
 			
-			let context = CIContext()
+//          let context = CIContext()
 			if let image = context.createCGImage(cropped, from: cropped.extent) {
 				return image
 			}
 		}
 		return nil
 	}
-    
 
 	@IBOutlet weak var imageViewCropped: UIImageView!
 	var c = 0
     var c1 = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         
-        //richiamato per ogni frame
-        
+//      richiamato per ogni frame
         c += 1
+//      guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-//        guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        
-//        let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
+//      let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
 //		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
 		
-		let croppedCGI = getImageFromSampleBuffer(buffer: sampleBuffer)
+        guard let croppedCGI = getImageFromSampleBuffer(buffer: sampleBuffer) else { return }
 		
-		let croppedCII = CIImage(cgImage: croppedCGI!)
+        let croppedCII = CIImage(cgImage: croppedCGI)
 		
-		//Remove comment if you want view how it's displayed dropped camera
-//         DispatchQueue.main.async { [unowned self] in
-//         self.imageViewCropped.image = self.convert(cmage: croppedCII)
-//		 self.imageViewCropped.center = self.view.center
-//         }
-//
-		
+		//Remove/add comment if you want view how it's displayed dropped camera
+         DispatchQueue.main.async { [unowned self] in
+             self.imageViewCropped.image = self.convert(cmage: croppedCII)
+//           self.imageViewCropped.center = self.view.center
+         }
 		
         if(c >= 10){
             c1 += 1
-            print("entrato \(c1)")
+//          print("entrato \(c1)")
+            
             // Prepare CoreML/Vision Request
 			let imageRequestHandler = VNImageRequestHandler(ciImage: croppedCII, options: [:])
             
@@ -182,7 +205,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
 	
-	// Convert CIImage to CGImage
+	// Convert CIImage to UImage
 	func convert(cmage:CIImage) -> UIImage
 	{
 		let context:CIContext = CIContext.init(options: nil)
@@ -227,11 +250,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // Only display a prediction if confidence is above 1%
             let topPredictionScore:Float? = Float(topPrediction.components(separatedBy: ":")[1].trimmingCharacters(in: .whitespaces))
             if (topPredictionScore != nil && topPredictionScore! > 0.01) {
-                if (topPredictionName == "resistenza" && topPredictionScore! > 0.40)
-				{ symbol = "👊"
+                if (topPredictionName == "resistenza" && topPredictionScore! > 0.40) {
+                    symbol = "👊"
                     self.highlightView?.layer.borderColor = UIColor.green.cgColor
-                }
-				else{
+                } else {
                     self.highlightView?.layer.borderColor = UIColor.red.cgColor
                 }
                 if (topPredictionName == "noresistenza") { symbol = "🖐" }
