@@ -147,7 +147,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         c += 1
         
-        guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+//        guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
 //        let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
 //		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
@@ -156,7 +156,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		
 		let croppedCII = CIImage(cgImage: croppedCGI!)
 		
-		
+		//Remove comment if you want view how it's displayed dropped camera
 //         DispatchQueue.main.async { [unowned self] in
 //         self.imageViewCropped.image = self.convert(cmage: croppedCII)
 //		 self.imageViewCropped.center = self.view.center
