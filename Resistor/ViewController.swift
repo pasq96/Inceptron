@@ -9,8 +9,6 @@
 import UIKit
 import AVFoundation
 import Vision
-import SceneKit
-import ARKit
 
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -51,21 +49,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-
-        // --- ARKIT ---
-        /*
-        // Set the view's delegate
-        sceneView.delegate = self
-        
-        // Show statistics such as fps and timing information
-        sceneView.showsStatistics = true
-        
-        // Create a new scene
-        let scene = SCNScene() // SCNScene(named: "art.scnassets/ship.scn")!
-        
-        // Set the scene to the view
-        sceneView.scene = scene
-        */
         
         // make the camera appear on the screen
         self.cameraView?.layer.addSublayer(self.cameraLayer)
@@ -187,10 +170,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	@IBOutlet weak var imageViewCropped: UIImageView!
 	var c = 0
     var c1 = 0
+    var croppedCII: CIImage!
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-		
-		
-		
 		
 //      richiamato per ogni frame
         c += 1
@@ -202,13 +183,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		//execute func defined at the end of the code
         guard let croppedCGI = getImageFromSampleBuffer(buffer: sampleBuffer) else { return }
 		
-        let croppedCII = CIImage(cgImage: croppedCGI)
+        croppedCII = CIImage(cgImage: croppedCGI)
 		
 		//Remove/add comment if you want view how it's displayed dropped camera
          DispatchQueue.main.async { [unowned self] in
 			
 			//execute func defined at the end of the code
-             self.imageViewCropped.image = self.convert(cmage: croppedCII)
+//            self.imageViewCropped.image = self.convert(cmage: self.croppedCII)
 //           self.imageViewCropped.center = self.view.center
          }
 		
@@ -225,8 +206,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             } catch {
                 print(error)
             }
-			
-			
+            
             c = 0;
         }
         
@@ -245,8 +225,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         guard let observations = request.results else {
             print("No results")
-			
-		
             return
         }
         
@@ -258,9 +236,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Render Classifications
         DispatchQueue.main.async {
-
             // Display Debug Text on screen
             self.debugTextView.text = "TOP 2 PROBABILITIES: \n" + classifications
+        }
 
             let topPrediction = classifications.components(separatedBy: "\n")[0]
             let topPredictionName = topPrediction.components(separatedBy: ":")[0].trimmingCharacters(in: .whitespaces)
@@ -269,20 +247,37 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let topPredictionScore:Float? = Float(topPrediction.components(separatedBy: ":")[1].trimmingCharacters(in: .whitespaces))
             if (topPredictionScore != nil && topPredictionScore! > 0.01) {
                 if (topPredictionName == "resistenza" && topPredictionScore! > 0.40) {
-					
-                    self.highlightView?.layer.borderColor = UIColor.green.cgColor
-					
-					
+//                    metodo di esempio per il passaggio dell'immagine
+//                    faccio un clone dell'immagine perchè non sono sicuro...
+                    funzioneCheFunziona(cheBelloEssereParametro: self.croppedCII.copy() as! CIImage)
+                    DispatchQueue.main.async {
+                        self.highlightView?.layer.borderColor = UIColor.green.cgColor
+                        //il clone qui non è necessario
+                        self.imageViewCropped.image = self.convert(cmage: self.croppedCII)
+                    }
                 } else {
-                    self.highlightView?.layer.borderColor = UIColor.red.cgColor
+                    DispatchQueue.main.async {
+                        self.highlightView?.layer.borderColor = UIColor.red.cgColor
+                    }
                 }
                 if (topPredictionName == "noresistenza") { }
             }
             
             //self.textOverlay.text = symbol
-            
-        }
     }
+
+    func funzioneCheFunziona(cheBelloEssereParametro: CIImage) -> Bool {
+//        qua dentro ci sta l'immagine, fanne cosa vuoi
+/*
+//        ----- ESEMPIO DI UTILIZZO ------
+        DispatchQueue.main.async {
+            self.imageViewCropped.image = self.convert(cmage: cheBelloEssereParametro)
+        }
+*/
+//        ritorna vero o falso
+        return true || false
+    }
+
     
 //    messa a fuoco
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
