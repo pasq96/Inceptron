@@ -186,12 +186,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         croppedCII = CIImage(cgImage: croppedCGI)
 		
 		//Remove/add comment if you want view how it's displayed dropped camera
-         DispatchQueue.main.async { [unowned self] in
-			
+//         DispatchQueue.main.async { [unowned self] in
+		
 			//execute func defined at the end of the code
 //            self.imageViewCropped.image = self.convert(cmage: self.croppedCII)
 //           self.imageViewCropped.center = self.view.center
-         }
+//         }
 		
         if(c >= 10){
             c1 += 1
@@ -246,14 +246,22 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             // Only display a prediction if confidence is above 1%
             let topPredictionScore:Float? = Float(topPrediction.components(separatedBy: ":")[1].trimmingCharacters(in: .whitespaces))
             if (topPredictionScore != nil && topPredictionScore! > 0.01) {
-                if (topPredictionName == "resistenza" && topPredictionScore! > 0.40) {
+                if (topPredictionName == "resistenza" && topPredictionScore! > 0.50) {
 //                    metodo di esempio per il passaggio dell'immagine
 //                    faccio un clone dell'immagine perchè non sono sicuro...
-                    funzioneCheFunziona(cheBelloEssereParametro: self.croppedCII.copy() as! CIImage)
+                    funzioneCheFunziona(image: self.croppedCII.copy() as! CIImage)
                     DispatchQueue.main.async {
                         self.highlightView?.layer.borderColor = UIColor.green.cgColor
-                        //il clone qui non è necessario
-                        self.imageViewCropped.image = self.convert(cmage: self.croppedCII)
+						self.imageViewCropped.image = self.convert(cmage: self.croppedCII)
+						
+						
+                        //solo per test, da rimuovere - salva il file all'interno della galleria
+						let image = self.convert(cmage: self.croppedCII.copy() as! CIImage)
+						UIImageWriteToSavedPhotosAlbum(image, self, nil, nil)
+						//fine test
+						
+						 
+						
                     }
                 } else {
                     DispatchQueue.main.async {
@@ -266,7 +274,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             //self.textOverlay.text = symbol
     }
 
-    func funzioneCheFunziona(cheBelloEssereParametro: CIImage) -> Bool {
+    func funzioneCheFunziona(image: CIImage) -> Bool {
 //        qua dentro ci sta l'immagine, fanne cosa vuoi
 /*
 //        ----- ESEMPIO DI UTILIZZO ------
@@ -275,6 +283,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
 */
 //        ritorna vero o falso
+//		let img = convert(cmage: image)
+//		if let data = UIImagePNGRepresentation(img) {
+//				let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+//				let filename = paths[0].appendingPathComponent("copy.png")
+//				try? data.write(to: filename)
+//		}
+		
         return true || false
     }
 
@@ -359,6 +374,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		}
 		return nil
 	}
+	
+
 	
 }
 
