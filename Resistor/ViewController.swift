@@ -44,6 +44,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var visionRequests = [VNRequest]()
     
     private let context = CIContext()
+	private var device: AVCaptureDevice =  AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
     
     var viewWidth: CGFloat!
     var viewHeight: CGFloat!
@@ -67,13 +68,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         sceneView.scene = scene
         */
         
-        
+		
         // hide the red focus area on load
 //        self.highlightView?.frame = .zero
         
         // make the camera appear on the screen
         self.cameraView?.layer.addSublayer(self.cameraLayer)
-        
         
         let output = AVCaptureVideoDataOutput()
         output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "queue"))
@@ -102,9 +102,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Start video capture.
         captureSession.startRunning()
 //        self.highlightView?.center = view.center
-		
-	
-//      debugTextView.bringSubview(toFront: imageView)
+
         
         //orientamento dell'immagine
         guard let connection = output.connection(with: AVFoundation.AVMediaType.video) else { return }
@@ -121,8 +119,52 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
  */
         viewWidth = highlightView.bounds.width * UIScreen.main.scale //* highlightView.transform.a
         viewHeight = highlightView.bounds.height * UIScreen.main.scale //* highlightView.transform.d
+		
+		
+		//Implementing gesture for flash on/off
+		let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(handleGesture))
+		swipeLeft.direction = .left
+		self.view.addGestureRecognizer(swipeLeft)
+		
+		let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(handleGesture))
+		swipeRight.direction = .right
+		self.view.addGestureRecognizer(swipeRight)
     }
-    
+	
+	//gesture function
+	@objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
+		if (device.hasTorch) {
+			do {
+				try device.lockForConfiguration()
+				switch gesture.direction
+				{
+				case UISwipeGestureRecognizerDirection.right:
+					device.torchMode = .on
+					try device.setTorchModeOn(level: 1.0)
+					break
+					
+				case UISwipeGestureRecognizerDirection.left:
+					
+					device.torchMode = .off
+					break
+					
+				default:
+					break
+				}
+				device.unlockForConfiguration()
+			}
+			catch {
+				print(error)
+			}
+			
+		}
+	}
+	
+	@IBAction func toggleFlashGesture(_ sender: UISwipeGestureRecognizer) {
+		
+		
+	}
+	
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -168,7 +210,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	var c = 0
     var c1 = 0
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        
+		
+		
+		
+		
 //      richiamato per ogni frame
         c += 1
 //      guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
@@ -213,8 +258,35 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		let image:UIImage = UIImage.init(cgImage: cgImage)
 		return image
 	}
-
-    
+	
+	
+	
+	
+	
+	@IBAction func toggleFlash(_ sender: UISwitch!, forEvent event: UIEvent) {
+		if (device.hasTorch) {
+			do {
+				try device.lockForConfiguration()
+				if (sender.isOn)
+				{
+					device.torchMode = .on
+					try device.setTorchModeOn(level: 1.0)
+				}
+				else {
+					if (!sender.isOn)
+					{
+						device.torchMode = .off
+					}
+				}
+				device.unlockForConfiguration()
+			}
+			catch {
+				print(error)
+			}
+		}
+	}
+	
+	
     // MARK: - MACHINE LEARNING
     
     func classificationCompleteHandler(request: VNRequest, error: Error?) {
@@ -242,7 +314,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             // Display Debug Text on screen
             self.debugTextView.text = "TOP 3 PROBABILITIES: \n" + classifications
-            
             // Display Top Symbol
            var symbol = "❎"
             let topPrediction = classifications.components(separatedBy: "\n")[0]
@@ -276,7 +347,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             if let device = captureDevice {
                 do {
                     try device.lockForConfiguration()
-                    
+					
                     device.focusPointOfInterest = focusPoint
                     //device.focusMode = .continuousAutoFocus
                     device.focusMode = .autoFocus
@@ -295,7 +366,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	var pivotPinchScale: CGFloat!
 	
 	@IBAction func pinchToZoom(_ sender: UIPinchGestureRecognizer) {
-			let device: AVCaptureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
 			do {
 				try device.lockForConfiguration()
 				switch sender.state {
