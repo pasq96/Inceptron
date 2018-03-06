@@ -38,13 +38,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }()
     
     private lazy var cameraLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-    
-    var videoPreviewLayer:AVCaptureVideoPreviewLayer?
-    
-    var visionRequests = [VNRequest]()
-    
-    private let context = CIContext()
 	private var device: AVCaptureDevice =  AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+	
+    var videoPreviewLayer:AVCaptureVideoPreviewLayer?
+    var visionRequests = [VNRequest]()
+    private let context = CIContext()
+	
     
     var viewWidth: CGFloat!
     var viewHeight: CGFloat!
@@ -68,10 +67,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         sceneView.scene = scene
         */
         
-		
-        // hide the red focus area on load
-//        self.highlightView?.frame = .zero
-        
         // make the camera appear on the screen
         self.cameraView?.layer.addSublayer(self.cameraLayer)
         
@@ -88,21 +83,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         */
         
         // --- ML & Vision ---
-        
+		
         // Setup Vision Model
         guard let selectedModel = try? VNCoreMLModel(for: resistor_model().model) else {
             fatalError("Could not load model.")
         }
-        
         // Set up Vision-CoreML Request
         let classificationRequest = VNCoreMLRequest(model: selectedModel, completionHandler: classificationCompleteHandler)
         classificationRequest.imageCropAndScaleOption = VNImageCropAndScaleOption.centerCrop // Crop from centre of images and scale to appropriate size.
         visionRequests = [classificationRequest]
-        
+		
+		// --- END ML & Vision ---
+		
         // Start video capture.
         captureSession.startRunning()
-//        self.highlightView?.center = view.center
-
         
         //orientamento dell'immagine
         guard let connection = output.connection(with: AVFoundation.AVMediaType.video) else { return }
@@ -111,12 +105,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         connection.videoOrientation = .portrait
         connection.isVideoMirrored = AVCaptureDevice.Position.back == .front
  
-/*
-        let viewWidth = highlightView.frame.width
-        let viewHeight = highlightView.frame.height
-        
-        let rect = CGRect(x: uiImage.size.width/2, y: uiImage.size.height/2, width: viewWidth, height: viewHeight)
- */
         viewWidth = highlightView.bounds.width * UIScreen.main.scale //* highlightView.transform.a
         viewHeight = highlightView.bounds.height * UIScreen.main.scale //* highlightView.transform.d
 		
@@ -131,138 +119,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		self.view.addGestureRecognizer(swipeRight)
     }
 	
-	//gesture function
-	@objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
-		if (device.hasTorch) {
-			do {
-				try device.lockForConfiguration()
-				switch gesture.direction
-				{
-				case UISwipeGestureRecognizerDirection.right:
-					device.torchMode = .on
-					try device.setTorchModeOn(level: 1.0)
-					break
-					
-				case UISwipeGestureRecognizerDirection.left:
-					
-					device.torchMode = .off
-					break
-					
-				default:
-					break
-				}
-				device.unlockForConfiguration()
-			}
-			catch {
-				print(error)
-			}
-			
-		}
-	}
-	
-	@IBAction func toggleFlashGesture(_ sender: UISwipeGestureRecognizer) {
-		
-		
-	}
-	
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        // make sure the layer is the correct size
-        self.cameraLayer.frame = self.cameraView?.bounds ?? .zero
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-	
-	func getImageFromSampleBuffer (buffer:CMSampleBuffer) -> CGImage? {
-        
-        if(viewHeight == nil) { return nil }
-		
-        if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
-
-            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-            
-            let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
-            let uiImage = UIImage(cgImage: cgImage!)
-
-//          let position = CGPoint(x: UIScreen.main.bounds.midX*1.25 ,y: UIScreen.main.bounds.midY*1.45)
-//          let rect = CGRect(origin: position, size: CGSize(width: 450.0, height: 250.0))
-
-//          print(UIScreen.main.scale)
-//          print("altezza: \(viewHeight) larghezza: \(viewWidth)")
-            
-            let rect = CGRect(x: (uiImage.size.width - viewWidth) / 2, y: (uiImage.size.height - viewHeight / 2) / 2, width: viewWidth, height: viewHeight)
- 
-            let cropped = ciImage.cropped(to: rect)
-			
-//          let context = CIContext()
-			if let image = context.createCGImage(cropped, from: cropped.extent) {
-				return image
-			}
-		}
-		return nil
-	}
-
-	@IBOutlet weak var imageViewCropped: UIImageView!
-	var c = 0
-    var c1 = 0
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-		
-		
-		
-		
-//      richiamato per ogni frame
-        c += 1
-//      guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
-        
-//      let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
-//		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
-		
-        guard let croppedCGI = getImageFromSampleBuffer(buffer: sampleBuffer) else { return }
-		
-        let croppedCII = CIImage(cgImage: croppedCGI)
-		
-		//Remove/add comment if you want view how it's displayed dropped camera
-         DispatchQueue.main.async { [unowned self] in
-             self.imageViewCropped.image = self.convert(cmage: croppedCII)
-//           self.imageViewCropped.center = self.view.center
-         }
-		
-        if(c >= 10){
-            c1 += 1
-//          print("entrato \(c1)")
-            
-            // Prepare CoreML/Vision Request
-			let imageRequestHandler = VNImageRequestHandler(ciImage: croppedCII, options: [:])
-            
-            // Run Vision Image Request
-            do {
-                try imageRequestHandler.perform(self.visionRequests)
-            } catch {
-                print(error)
-            }
-            c = 0;
-        }
-        
-        
-    }
-	
-	// Convert CIImage to UImage
-	func convert(cmage:CIImage) -> UIImage
-	{
-		let context:CIContext = CIContext.init(options: nil)
-		let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent)!
-		let image:UIImage = UIImage.init(cgImage: cgImage)
-		return image
-	}
-	
-	
-	
-	
-	
+	// ----- FLASH
 	@IBAction func toggleFlash(_ sender: UISwitch!, forEvent event: UIEvent) {
 		if (device.hasTorch) {
 			do {
@@ -286,6 +143,97 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		}
 	}
 	
+	//gesture function
+	@objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
+		if (device.hasTorch) {
+			do {
+				try device.lockForConfiguration()
+				switch gesture.direction
+				{
+					case UISwipeGestureRecognizerDirection.right:
+						device.torchMode = .on
+						try device.setTorchModeOn(level: 1.0)
+						break
+					case UISwipeGestureRecognizerDirection.left:
+						device.torchMode = .off
+						break
+					default:
+						break
+				}
+				device.unlockForConfiguration()
+			}
+			catch {
+				print(error)
+			}
+			
+		}
+	}
+	
+	//---- FLASH END
+	
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // make sure the layer is the correct size
+        self.cameraLayer.frame = self.cameraView?.bounds ?? .zero
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+	
+
+	@IBOutlet weak var imageViewCropped: UIImageView!
+	var c = 0
+    var c1 = 0
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+		
+		
+		
+		
+//      richiamato per ogni frame
+        c += 1
+//      guard let pixelBuffet: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        
+//      let ciImage = CIImage(cvPixelBuffer: pixelBuffet)
+//		let cropped = ciImage.cropped(to: CGRect(origin: view.center, size: CGSize(width: 400.0, height: 200.0)))
+		
+		//execute func defined at the end of the code
+        guard let croppedCGI = getImageFromSampleBuffer(buffer: sampleBuffer) else { return }
+		
+        let croppedCII = CIImage(cgImage: croppedCGI)
+		
+		//Remove/add comment if you want view how it's displayed dropped camera
+         DispatchQueue.main.async { [unowned self] in
+			
+			//execute func defined at the end of the code
+             self.imageViewCropped.image = self.convert(cmage: croppedCII)
+//           self.imageViewCropped.center = self.view.center
+         }
+		
+        if(c >= 10){
+            c1 += 1
+//          print("entrato \(c1)")
+            
+            // Prepare CoreML/Vision Request
+			let imageRequestHandler = VNImageRequestHandler(ciImage: croppedCII, options: [:])
+            
+            // Run Vision Image Request
+            do {
+                try imageRequestHandler.perform(self.visionRequests)
+            } catch {
+                print(error)
+            }
+			
+			
+            c = 0;
+        }
+        
+        
+    }
+	
+	
 	
     // MARK: - MACHINE LEARNING
     
@@ -297,6 +245,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         guard let observations = request.results else {
             print("No results")
+			
+		
             return
         }
         
@@ -308,29 +258,28 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // Render Classifications
         DispatchQueue.main.async {
-            // Print Classifications
-            // print(classifications)
-            // print("-------------")
-            
+
             // Display Debug Text on screen
-            self.debugTextView.text = "TOP 3 PROBABILITIES: \n" + classifications
-            // Display Top Symbol
-           var symbol = "❎"
+            self.debugTextView.text = "TOP 2 PROBABILITIES: \n" + classifications
+
             let topPrediction = classifications.components(separatedBy: "\n")[0]
             let topPredictionName = topPrediction.components(separatedBy: ":")[0].trimmingCharacters(in: .whitespaces)
+			
             // Only display a prediction if confidence is above 1%
             let topPredictionScore:Float? = Float(topPrediction.components(separatedBy: ":")[1].trimmingCharacters(in: .whitespaces))
             if (topPredictionScore != nil && topPredictionScore! > 0.01) {
                 if (topPredictionName == "resistenza" && topPredictionScore! > 0.40) {
-                    symbol = "👊"
+					
                     self.highlightView?.layer.borderColor = UIColor.green.cgColor
+					
+					
                 } else {
                     self.highlightView?.layer.borderColor = UIColor.red.cgColor
                 }
-                if (topPredictionName == "noresistenza") { symbol = "🖐" }
+                if (topPredictionName == "noresistenza") { }
             }
             
-            //            self.textOverlay.text = symbol
+            //self.textOverlay.text = symbol
             
         }
     }
@@ -383,6 +332,38 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				// handle exception
 			}
 		}
+	
+	// Convert CIImage to UImage
+	func convert(cmage:CIImage) -> UIImage
+	{
+		let context:CIContext = CIContext.init(options: nil)
+		let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent)!
+		let image:UIImage = UIImage.init(cgImage: cgImage)
+		return image
+	}
+	
+	//get CGImage from CMSampleBuffer
+	func getImageFromSampleBuffer (buffer:CMSampleBuffer) -> CGImage? {
+		
+		if(viewHeight == nil) { return nil }
+		
+		if let pixelBuffer = CMSampleBufferGetImageBuffer(buffer) {
+			
+			let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+			let cgImage = context.createCGImage(ciImage, from: ciImage.extent)
+			let uiImage = UIImage(cgImage: cgImage!)
+			
+			let rect = CGRect(x: (uiImage.size.width - viewWidth) / 2, y: (uiImage.size.height - viewHeight / 2) / 2, width: viewWidth, height: viewHeight)
+			
+			let cropped = ciImage.cropped(to: rect)
+			
+			//          let context = CIContext()
+			if let image = context.createCGImage(cropped, from: cropped.extent) {
+				return image
+			}
+		}
+		return nil
+	}
 	
 }
 
