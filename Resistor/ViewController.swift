@@ -45,6 +45,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	
 	var viewWidth: CGFloat!
 	var viewHeight: CGFloat!
+    
+    var imWorking = false
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -255,23 +257,25 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				//                    metodo di esempio per il passaggio dell'immagine
 				//                    faccio un clone dell'immagine perchè non sono sicuro...
 				//funzioneCheFunziona(image: self.croppedCII.copy() as! CIImage)
+                
+                //locco perchè sto lavorando, che ti pensi ue
+                self.imWorking = true
 				
-				
-				
+                //var to store image cropped that have prediction > 0.50
+                self.imageCroppedGreen = self.croppedCII
+                
+                let filter = AdaptiveThreshold()
+                let image =  self.convert(cmage: self.croppedCII)
+                filter.inputImage = CIImage(image: image, options: [kCIImageColorSpace: NSNull()])
+                
+                let final = filter.outputImage!
+                
+                let uiimage = self.convert(cmage: final)
+                
 				DispatchQueue.main.async {
 					self.highlightView?.layer.borderColor = UIColor.green.cgColor
-					//var to store image cropped that have prediction > 0.50
-					self.imageCroppedGreen = self.croppedCII
-					//set the imageGroppedgreen in the view imageViewCropped 
-					self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
-					
-					let filter = AdaptiveThreshold()
-					let image =  self.imageViewCropped.image!
-					filter.inputImage = CIImage(image: image, options: [kCIImageColorSpace: NSNull()])
-
-					let final = filter.outputImage!
-					
-					let uiimage = self.convert(cmage: final)
+					//set the imageGroppedgreen in the view imageViewCropped
+					//self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
 					
 					self.imageViewCropped.image = uiimage
 					
@@ -279,6 +283,110 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 //					tap.numberOfTapsRequired = 2
 //					self.view.addGestureRecognizer(tap)
 				}
+                
+                print("convert ciao")
+//                let ciao = self.convert(cmage: self.imageCroppedGreen)
+                
+                let width = Int(uiimage.size.width)
+                let height = Int(uiimage.size.height)
+                
+                var array = Array<CatchedPoint>()
+                
+                //elaboro pixel per pixel facendo la media dei colori per colonna
+                for pixel in 0..<width{
+//                    let rect = CGRect(x: pixel, y: 0, width: 1, height: height)
+                    let rect = CGRect(x: pixel, y: 0, width: 1, height: height/2)
+                    
+                    if let currentFilter = CIFilter(name: "CIColumnAverage") {
+                        currentFilter.setValue(final.cropped(to: rect), forKey: kCIInputImageKey)
+//                        currentFilter.setValue(0.5, forKey: kCIInputIntensityKey)
+//                            currentFilter.setValue(0, forKey: kCIInputSaturationKey)
+                        
+                        if let output = currentFilter.outputImage {
+//                            print("convert color")
+                            let current = CatchedPoint()
+                            current.color = self.getPixelColor(image: self.convert(cmage: output), pos: CGPoint(x: 0, y: 0))
+                            
+                            if(pixel == 0){
+                                current.minPoint = pixel
+                                array.append(current)
+                            }
+                            
+                            let distance = sqrtf(powf((Float((array.last?.color!.red)! - current.color.red)), 2) + powf((Float((array.last?.color!.green)! - current.color.green)), 2) + powf((Float((array.last?.color!.blue)! - current.color.blue)), 2) );
+                            print(distance)
+                            // valore da impostare per la distanza fra i colori
+                            if(distance > 0.2){
+                                array.last?.maxPoint = pixel - 1
+                                current.minPoint = pixel
+                                array.append(current)
+                            }
+                            /*
+                             if let cgimg = self.context.createCGImage(output, from: output.extent) {
+                             self.imageViewCropped.image = self.convert(cmage: output)
+                             let processedImage = UIImage(cgImage: cgimg)
+                             // do something interesting with the processed image
+                             }
+                             */
+                        }
+                    }
+                }
+                
+                array.last?.maxPoint = width - 1
+                
+                print("array length \(array.count)")
+                
+                /*
+                DispatchQueue.main.async {
+                    
+                    for (index, color) in array.enumerated() {
+                        print("metto colore")
+                        var imageView = UIImageView(image: self.convert(cmage: self.croppedCII))
+                        imageView.backgroundColor = UIColor(ciColor: color)
+                        imageView.tintColor = UIColor(ciColor: color)
+                        imageView.frame = CGRect(x: 320 * CGFloat(index), y: 0, width: 320, height: 130)
+                        self.view.addSubview(imageView)
+                        sleep(1)
+                    }
+                }
+
+                 */
+                
+                print("inizio a stampare i colori")
+                
+                for catchedPoint in array {
+                    let point = (catchedPoint.maxPoint + catchedPoint.minPoint) / 2
+                    
+//                    let rect = CGRect(x: point, y: 0, width: 1, height: height)
+                    let rect = CGRect(x: point, y: 0, width: 1, height: height)
+                    
+                    if let currentFilter = CIFilter(name: "CIColumnAverage") {
+                        currentFilter.setValue(self.imageCroppedGreen.cropped(to: rect), forKey: kCIInputImageKey)
+                        //                        currentFilter.setValue(0.5, forKey: kCIInputIntensityKey)
+                        //                            currentFilter.setValue(0, forKey: kCIInputSaturationKey)
+                        
+                        if let output = currentFilter.outputImage {
+                            let color = self.getPixelColor(image: self.convert(cmage: output), pos: CGPoint(x: 0, y: 0))
+                            print(toHexString(color: UIColor(ciColor: color)))
+                            /*
+                            let a = String(
+                                format: "%02X%02X%02X",
+                                Int(color.red * 0xff),
+                                Int(color.green * 0xff),
+                                Int(color.blue * 0xff)
+                            )
+                            print(a)
+ */
+                        }
+                    }
+                    
+                    
+                }
+                
+                DispatchQueue.main.async {
+                    self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
+                }
+                
+                self.imWorking = false
 				
 			} else {
 				DispatchQueue.main.async {
@@ -290,6 +398,34 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		
 		//self.textOverlay.text = symbol
 	}
+    
+    func toHexString(color: UIColor) -> String {
+        var r:CGFloat = 0
+        var g:CGFloat = 0
+        var b:CGFloat = 0
+        var a:CGFloat = 0
+        
+        color.getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        let rgb:Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
+        
+        return NSString(format:"#%06x", rgb) as String
+    }
+    
+    func getPixelColor(image: UIImage, pos: CGPoint) -> CIColor {
+        
+        let pixelData = image.cgImage?.dataProvider!.data
+        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        let pixelInfo: Int = ((Int(image.size.width) * Int(pos.y)) + Int(pos.x)) * 4
+        
+        let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+        let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
+        let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
+        let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
+        
+        return CIColor(red: r, green: g, blue: b, alpha: a)
+    }
 	
 	@objc func handleTap(gesture: UITapGestureRecognizer) {
 		
