@@ -260,12 +260,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				
 				DispatchQueue.main.async {
 					self.highlightView?.layer.borderColor = UIColor.green.cgColor
+					//var to store image cropped that have prediction > 0.50
 					self.imageCroppedGreen = self.croppedCII
+					//set the imageGroppedgreen in the view imageViewCropped 
 					self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
 					
 					let filter = AdaptiveThreshold()
-
-					filter.inputImage = CIImage(image: self.imageViewCropped.image!, options: [kCIImageColorSpace: NSNull()])
+					let image =  self.imageViewCropped.image!
+					filter.inputImage = CIImage(image: image, options: [kCIImageColorSpace: NSNull()])
 
 					let final = filter.outputImage!
 					

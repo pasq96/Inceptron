@@ -43,7 +43,7 @@ class AdaptiveThreshold: CIFilter
 //	}
 	
 
-		var threshold: Float = 0.344688 // This is set to a good value via Otsu's method
+		var threshold: Float = 0.184688 // This is set to a good value via Otsu's method
 		
 		var thresholdKernel =  CIColorKernel(source:
 			"kernel vec4 thresholdKernel(sampler image, float threshold) {" +
