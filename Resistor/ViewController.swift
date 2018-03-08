@@ -9,6 +9,7 @@
 import UIKit
 import AVFoundation
 import Vision
+import CoreImage
 
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -50,13 +51,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
 		
+		//
+		cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
 		// make the camera appear on the screen
 		self.cameraView?.layer.addSublayer(self.cameraLayer)
 		
 		let output = AVCaptureVideoDataOutput()
 		output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "queue"))
 		captureSession.addOutput(output)
-		autofocus()
+		
 		// Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
 		/*
 		videoPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
@@ -80,6 +83,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		
 		// Start video capture.
 		captureSession.startRunning()
+		autofocusExposure()
 		
 		//orientamento dell'immagine
 		guard let connection = output.connection(with: AVFoundation.AVMediaType.video) else { return }
@@ -107,29 +111,35 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 	}
 	
 	// ----- FLASH
-	@IBAction func toggleFlash(_ sender: UISwitch!, forEvent event: UIEvent) {
-		if (device.hasTorch) {
-			do {
-				try device.lockForConfiguration()
-				
-				if (sender.isOn)
-				{
-					device.torchMode = .on
-					try device.setTorchModeOn(level: 1.0)
+	@IBOutlet weak var torchButton: UIButton!
+	@IBAction func enableFlash(_ sender: UIButton)
+		{
+			if (device.hasTorch) {
+				do {
+					
+					try device.lockForConfiguration()
+						if (device.isTorchActive == false)
+						{
+							
+							device.torchMode = .on
+							sender.setBackgroundImage(UIImage(named: "flash-on"), for: UIControlState.normal)
+							try device.setTorchModeOn(level: 1.0)
+						}
+						else
+						{
+							device.torchMode = .off
+							sender.setBackgroundImage(UIImage(named: "flash-off"), for: UIControlState.normal)
+							
+						}
+					device.unlockForConfiguration()
 				}
-				else {
-					if (!sender.isOn)
-					{
-						device.torchMode = .off
-					}
+				catch {
+					print(error)
 				}
-				device.unlockForConfiguration()
 			}
-			catch {
-				print(error)
-			}
-		}
 	}
+		
+
 	
 	//gesture function
 	@objc func handleGesture(gesture: UISwipeGestureRecognizer) -> Void {
@@ -140,10 +150,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				{
 				case UISwipeGestureRecognizerDirection.right:
 					device.torchMode = .on
+					torchButton.setBackgroundImage(UIImage(named: "flash-on"), for: UIControlState.normal)
 					try device.setTorchModeOn(level: 1.0)
 					break
 				case UISwipeGestureRecognizerDirection.left:
 					device.torchMode = .off
+					torchButton.setBackgroundImage(UIImage(named: "flash-off"), for: UIControlState.normal)
 					break
 				default:
 					break
@@ -243,7 +255,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		// Render Classifications
 		DispatchQueue.main.async {
 			// Display Debug Text on screen
-			self.debugTextView.text = "TOP 2 PROBABILITIES: \n" + classifications
+			self.debugTextView.text = classifications
 		}
 		
 		let topPrediction = classifications.components(separatedBy: "\n")[0]
@@ -262,6 +274,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 					self.highlightView?.layer.borderColor = UIColor.green.cgColor
 					//var to store image cropped that have prediction > 0.50
 					self.imageCroppedGreen = self.croppedCII
+					
+					self.imageCroppedGreen = self.filterImage(image: self.imageCroppedGreen)
+					
+					
+					
 					//set the imageGroppedgreen in the view imageViewCropped 
 					self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
 					
@@ -291,6 +308,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		//self.textOverlay.text = symbol
 	}
 	
+	
+	
+	//FILTER NOISE REDUCTION FUNCTION
+	func filterImage(image: CIImage) -> CIImage? {
+		
+		let filter = CIFilter(name: "CINoiseReduction")!
+		filter.setValue(0.03, forKey: "inputNoiseLevel")
+		filter.setValue(0.60, forKey: "inputSharpness")
+		filter.setValue(image, forKey: kCIInputImageKey)
+		let result = filter.outputImage!
+		return result
+	}
+	
 	@objc func handleTap(gesture: UITapGestureRecognizer) {
 		
 		//solo per test, da rimuovere - salva il file all'interno della galleria
@@ -314,7 +344,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 				let croppedUI = self.convert(cmage: cropped)
 //
 //				UIImageWriteToSavedPhotosAlbum(croppedUI, nil, nil, nil)
-				
 				j = j + (image.size.height)/(k*3)
 				
 			}
@@ -407,12 +436,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		return image
 	}
 	
-	//autofocus
-	func autofocus()
+	//autofocus and autoexposure
+	func autofocusExposure()
 	{
 		do {
 			try device.lockForConfiguration()
 			device.focusMode = AVCaptureDevice.FocusMode.autoFocus
+			device.exposureMode = AVCaptureDevice.ExposureMode.continuousAutoExposure
 			device.unlockForConfiguration()
 		} catch {
 			// handle exception
