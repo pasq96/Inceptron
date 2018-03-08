@@ -262,9 +262,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 					self.highlightView?.layer.borderColor = UIColor.green.cgColor
 					self.imageCroppedGreen = self.croppedCII
 					self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
-					let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
-					tap.numberOfTapsRequired = 2
-					self.view.addGestureRecognizer(tap)
+					
+					let filter = AdaptiveThreshold()
+
+					filter.inputImage = CIImage(image: self.imageViewCropped.image!, options: [kCIImageColorSpace: NSNull()])
+
+					let final = filter.outputImage!
+					
+					let uiimage = self.convert(cmage: final)
+					
+					self.imageViewCropped.image = uiimage
+					
+//					let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap))
+//					tap.numberOfTapsRequired = 2
+//					self.view.addGestureRecognizer(tap)
 				}
 				
 			} else {
@@ -432,7 +443,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 		return nil
 	}
 	
-	
+
 	
 }
 
