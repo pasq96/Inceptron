@@ -13,6 +13,7 @@
 		0AA8110C204D3FB100250783 /* Resistor.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0AA8110A204D3FB100250783 /* Resistor.xcdatamodeld */; };
 		0AA8110E204D3FB100250783 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AA8110D204D3FB100250783 /* Assets.xcassets */; };
 		0AA81111204D3FB100250783 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AA8110F204D3FB100250783 /* LaunchScreen.storyboard */; };
+		0AB37F1A2051861E009B1D8B /* CatchedPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB37F192051861E009B1D8B /* CatchedPoint.swift */; };
 		1C25CDDD204D82360015C410 /* resistor_model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1C25CDDC204D82360015C410 /* resistor_model.mlmodel */; };
 		1C8D51812051428900B6430D /* AdaptiveThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8D51802051428900B6430D /* AdaptiveThreshold.swift */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,7 @@
 		0AA81112204D3FB100250783 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AA81117204D3FB100250783 /* ResistorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResistorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AA81122204D3FB100250783 /* ResistorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResistorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AB37F192051861E009B1D8B /* CatchedPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchedPoint.swift; sourceTree = "<group>"; };
 		1C25CDDC204D82360015C410 /* resistor_model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = resistor_model.mlmodel; sourceTree = "<group>"; };
 		1C8D51802051428900B6430D /* AdaptiveThreshold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveThreshold.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +106,7 @@
 				0AA81112204D3FB100250783 /* Info.plist */,
 				0AA8110A204D3FB100250783 /* Resistor.xcdatamodeld */,
 				1C8D51802051428900B6430D /* AdaptiveThreshold.swift */,
+				0AB37F192051861E009B1D8B /* CatchedPoint.swift */,
 			);
 			path = Resistor;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 				1C8D51812051428900B6430D /* AdaptiveThreshold.swift in Sources */,
 				0AA81106204D3FB100250783 /* ViewController.swift in Sources */,
 				0AA81104204D3FB100250783 /* AppDelegate.swift in Sources */,
+				0AB37F1A2051861E009B1D8B /* CatchedPoint.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
