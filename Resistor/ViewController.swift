@@ -14,14 +14,25 @@ import CoreImage
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
+    @IBOutlet weak var resultView: UIView!
+        {
+        didSet {
+            self.resultView?.layer.cornerRadius = 10.0
+//            self.resultView?.layer.masksToBounds = true
+//            self.resultView?.clipsToBounds = true
+            self.resultView?.layer.borderColor = UIColor.white.cgColor
+            self.resultView?.layer.borderWidth = 3
+        }
+    }
     @IBOutlet weak var debugTextView: UITextView!
     @IBOutlet weak var cameraView: UIView!
     @IBOutlet private weak var highlightView: UIView!
-        {
+    {
         didSet {
-            self.highlightView?.layer.borderColor = UIColor.red.cgColor
+            self.highlightView?.layer.borderColor = UIColor.white.cgColor
             self.highlightView?.layer.borderWidth = 3
             self.highlightView?.backgroundColor = .clear
+            self.highlightView?.layer.cornerRadius = 8.0
         }
     }
     
@@ -304,17 +315,24 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 
                 var array = Array<CatchedPoint>()
                 
+                print("final = \(final)")
+                
                 //elaboro pixel per pixel facendo la media dei colori per colonna
                 for pixel in 0..<width{
+//                    print("elaboro pixel \(pixel)")
 //                    let rect = CGRect(x: pixel, y: 0, width: 1, height: height)
-                    let rect = CGRect(x: pixel, y: 0, width: 1, height: height/2)
+//                    let rect = CGRect(x: pixel, y: 0, width: 1, height: height)
+                    let rect = CGRect(x: pixel, y: (height - 60 / 2) / 2, width: 1, height: 60)
                     
                     if let currentFilter = CIFilter(name: "CIColumnAverage") {
+//                        print(final.cropped(to: rect))
                         currentFilter.setValue(final.cropped(to: rect), forKey: kCIInputImageKey)
 //                        currentFilter.setValue(0.5, forKey: kCIInputIntensityKey)
 //                            currentFilter.setValue(0, forKey: kCIInputSaturationKey)
-                        
+
                         if let output = currentFilter.outputImage {
+//                            print(output)
+                            if output.extent.isEmpty { print("empty"); continue }
 //                            print("convert color")
                             let current = CatchedPoint()
                             current.color = self.getPixelColor(image: self.convert(cmage: output), pos: CGPoint(x: 0, y: 0))
@@ -325,9 +343,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                             }
                             
                             let distance = sqrtf(powf((Float((array.last?.color!.red)! - current.color.red)), 2) + powf((Float((array.last?.color!.green)! - current.color.green)), 2) + powf((Float((array.last?.color!.blue)! - current.color.blue)), 2) );
-                            print(distance)
+//                            print(distance)
                             // valore da impostare per la distanza fra i colori
-                            if(distance > 0.2){
+                            if(distance > 0.4){
                                 array.last?.maxPoint = pixel - 1
                                 current.minPoint = pixel
                                 array.append(current)
@@ -364,12 +382,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                  */
                 
                 print("inizio a stampare i colori")
-                
+//                cattura dei colori dall'immagine colorata senza applicazione di filtri
                 for catchedPoint in array {
                     let point = (catchedPoint.maxPoint + catchedPoint.minPoint) / 2
                     
 //                    let rect = CGRect(x: point, y: 0, width: 1, height: height)
-                    let rect = CGRect(x: point, y: 0, width: 1, height: height)
+//                    let rect = CGRect(x: point, y: 0, width: 1, height: height)
+                    let rect = CGRect(x: point, y: (height - 60 / 2) / 2, width: 1, height: 60)
                     
                     if let currentFilter = CIFilter(name: "CIColumnAverage") {
                         currentFilter.setValue(self.imageCroppedGreen.cropped(to: rect), forKey: kCIInputImageKey)
@@ -377,6 +396,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                         //                            currentFilter.setValue(0, forKey: kCIInputSaturationKey)
                         
                         if let output = currentFilter.outputImage {
+                            if output.extent.isEmpty { continue }
                             let color = self.getPixelColor(image: self.convert(cmage: output), pos: CGPoint(x: 0, y: 0))
                             print(toHexString(color: UIColor(ciColor: color)))
                             /*
@@ -397,12 +417,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 DispatchQueue.main.async {
                     self.imageViewCropped.image = self.convert(cmage: self.imageCroppedGreen)
                 }
-                
+//                finito di lavorare
                 self.imWorking = false
                 
             } else {
                 DispatchQueue.main.async {
-                    self.highlightView?.layer.borderColor = UIColor.red.cgColor
+                    self.highlightView?.layer.borderColor = UIColor.white.cgColor
                 }
             }
             if (topPredictionName == "noresistenza") { }
@@ -470,9 +490,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             print("Value of i: \(i)")
             while(j <= (image.size.height - image.size.height/k)){
                 print("Value of j: \(j)")
-                let rect = CGRect(x: i, y: j , width: (image.size.width)/k, height: (image.size.height)/k)
-                let cropped = self.imageCroppedGreen.cropped(to: rect)
-                let croppedUI = self.convert(cmage: cropped)
+//                let rect = CGRect(x: i, y: j , width: (image.size.width)/k, height: (image.size.height)/k)
+//                let cropped = self.imageCroppedGreen.cropped(to: rect)
+//                let croppedUI = self.convert(cmage: cropped)
 //
 //                UIImageWriteToSavedPhotosAlbum(croppedUI, nil, nil, nil)
                 j = j + (image.size.height)/(k*3)
@@ -561,7 +581,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     // Convert CIImage to UImage
     func convert(cmage:CIImage) -> UIImage
     {
-        let context:CIContext = CIContext.init(options: nil)
+//        print(cmage)
+//        let context:CIContext = CIContext.init(options: nil)
         let cgImage:CGImage = context.createCGImage(cmage, from: cmage.extent)!
         let image:UIImage = UIImage.init(cgImage: cgImage)
         return image
