@@ -213,7 +213,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         //           self.imageViewCropped.center = self.view.center
         //         }
         
-        if(c >= 10){
+        if(c >= 10 && !imWorking){
             c1 += 1
             //          print("entrato \(c1)")
             
