@@ -169,8 +169,8 @@
                                         <rect key="frame" x="0.0" y="0.0" width="283" height="62"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Inspectron v0.1" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5kZ-3m-s6T">
-                                                <rect key="frame" x="83.5" y="0.0" width="116" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <rect key="frame" x="79" y="0.0" width="125.5" height="20.5"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -198,12 +198,12 @@
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Team members" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eDV-Fv-hpX">
-                                <rect key="frame" x="122" y="431" width="132" height="21"/>
+                                <rect key="frame" x="118.5" y="431" width="139.5" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="EhW-D1-y4a"/>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="131.5" id="wHE-qg-c2d"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
