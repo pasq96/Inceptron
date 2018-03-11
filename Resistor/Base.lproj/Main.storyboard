@@ -10,7 +10,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Inspectron-->
+        <!--Automatic recognition-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Resistor" customModuleProvider="target" sceneMemberID="viewController">
@@ -127,7 +127,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Inspectron" id="0M9-WX-tK7"/>
+                    <navigationItem key="navigationItem" title="Automatic recognition" id="0M9-WX-tK7"/>
                     <connections>
                         <outlet property="cameraView" destination="K2R-UJ-SvW" id="qsy-h6-aIe"/>
                         <outlet property="debugTextView" destination="pzF-hW-ERw" id="1oH-HP-Tk8"/>
@@ -244,6 +244,7 @@
         <!--Automatic recognition-->
         <scene sceneID="EHU-1I-LVY">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iF4-cG-NJi" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="VKb-UW-na7" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Automatic recognition" image="automatic_logo" id="S3o-d1-shY"/>
                     <toolbarItems/>
@@ -256,7 +257,6 @@
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="U7p-AL-7dw"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iF4-cG-NJi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="16.800000000000001" y="133.5832083958021"/>
         </scene>
@@ -426,7 +426,7 @@ Scroll through the colors to select the desired color and tap on "Calculate" to 
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="NgQ-zT-Vh6"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Inspectron" id="dsj-RT-Nch"/>
+                    <navigationItem key="navigationItem" title="Manual recognition" leftItemsSupplementBackButton="YES" largeTitleDisplayMode="never" id="dsj-RT-Nch"/>
                     <connections>
                         <outlet property="labelValue" destination="ao3-Zt-agJ" id="Qax-Tc-ont"/>
                         <outlet property="myButton" destination="S3l-I6-mo6" id="dVn-eg-Vst"/>
@@ -444,6 +444,7 @@ Scroll through the colors to select the desired color and tap on "Calculate" to 
         <!--Manual recognition-->
         <scene sceneID="2Op-re-QIJ">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="YNZ-pb-QwI" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="2nf-QW-eGh" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Manual recognition" image="manual_logo" id="c3D-Vf-meb"/>
                     <toolbarItems/>
@@ -456,7 +457,6 @@ Scroll through the colors to select the desired color and tap on "Calculate" to 
                         <segue destination="5dI-tV-eXa" kind="relationship" relationship="rootViewController" id="RUw-Jh-Bqf"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="YNZ-pb-QwI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="16.800000000000001" y="862.21889055472275"/>
         </scene>
@@ -482,6 +482,7 @@ Scroll through the colors to select the desired color and tap on "Calculate" to 
         <!--Info-->
         <scene sceneID="NUe-Pv-oyl">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dUW-go-YYA" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController title="Info" automaticallyAdjustsScrollViewInsets="NO" id="7mK-1Q-hTF" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Information" image="info" id="V4g-wa-wfF"/>
                     <toolbarItems/>
@@ -494,7 +495,6 @@ Scroll through the colors to select the desired color and tap on "Calculate" to 
                         <segue destination="Wjd-1g-VGg" kind="relationship" relationship="rootViewController" id="z2p-0e-cmn"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dUW-go-YYA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="17" y="1603"/>
         </scene>
