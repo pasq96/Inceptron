@@ -14,6 +14,7 @@ import CoreImage
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
     
+    @IBOutlet weak var resultImageView: UIView!
     @IBOutlet weak var resultView: UIView!
         {
         didSet {
@@ -279,7 +280,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             if (topPredictionName == "resistenza" && topPredictionScore! > 0.50) {
                 //                    metodo di esempio per il passaggio dell'immagine
                 //                    faccio un clone dell'immagine perchè non sono sicuro...
-                //funzioneCheFunziona(image: self.croppedCII.copy() as! CIImage)
+                
                 
                 //locco perchè sto lavorando, che ti pensi ue
                 self.imWorking = true
@@ -381,9 +382,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
                  */
                 
-                print("inizio a stampare i colori")
+                DispatchQueue.main.async {
+                    self.resultImageView.subviews.forEach({ $0.removeFromSuperview() })
+                }
+                
 //                cattura dei colori dall'immagine colorata senza applicazione di filtri
-                for catchedPoint in array {
+
+                for (catchedIndex, catchedPoint) in array.enumerated() {
+                    
+//                    catchedPoint.color
+                    let distanceToBlack = sqrtf(powf((Float((catchedPoint.color.red) - 0)), 2) + powf((Float((catchedPoint.color.green) - 0)), 2) + powf((Float((catchedPoint.color.blue) - 0)), 2))
+                    
+                    if distanceToBlack > 1.0 { continue }
+                    
                     let point = (catchedPoint.maxPoint + catchedPoint.minPoint) / 2
                     
 //                    let rect = CGRect(x: point, y: 0, width: 1, height: height)
@@ -392,25 +403,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                     
                     if let currentFilter = CIFilter(name: "CIColumnAverage") {
                         currentFilter.setValue(self.imageCroppedGreen.cropped(to: rect), forKey: kCIInputImageKey)
-                        //                        currentFilter.setValue(0.5, forKey: kCIInputIntensityKey)
-                        //                            currentFilter.setValue(0, forKey: kCIInputSaturationKey)
+//                        currentFilter.setValue(0.5, forKey: kCIInputIntensityKey)
+//                            currentFilter.setValue(0, forKey: kCIInputSaturationKey)
                         
                         if let output = currentFilter.outputImage {
                             if output.extent.isEmpty { continue }
-                            let color = self.getPixelColor(image: self.convert(cmage: output), pos: CGPoint(x: 0, y: 0))
-                            print(toHexString(color: UIColor(ciColor: color)))
-                            /*
-                            let a = String(
-                                format: "%02X%02X%02X",
-                                Int(color.red * 0xff),
-                                Int(color.green * 0xff),
-                                Int(color.blue * 0xff)
-                            )
-                            print(a)
- */
+                            let uiimage = self.convert(cmage: output)
+
+                            DispatchQueue.main.async {
+                                let imageView = UIImageView(image: uiimage)
+                                imageView.frame = CGRect(x: catchedIndex * 10, y: 0, width: 50, height: 50)
+                                self.resultImageView.addSubview(imageView)
+                            }
                         }
                     }
-                    
                     
                 }
                 
@@ -505,29 +511,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
         }
         
-        
         //fine test
     }
-    
-    func funzioneCheFunziona(image: CIImage) -> Bool {
-        //        qua dentro ci sta l'immagine, fanne cosa vuoi
-        /*
-        //        ----- ESEMPIO DI UTILIZZO ------
-        DispatchQueue.main.async {
-        self.imageViewCropped.image = self.convert(cmage: cheBelloEssereParametro)
-        }
-        */
-        //        ritorna vero o falso
-        //        let img = convert(cmage: image)
-        //        if let data = UIImagePNGRepresentation(img) {
-        //                let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        //                let filename = paths[0].appendingPathComponent("copy.png")
-        //                try? data.write(to: filename)
-        //        }
-        
-        return true || false
-    }
-    
     
     //    messa a fuoco
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
