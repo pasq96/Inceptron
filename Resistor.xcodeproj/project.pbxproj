@@ -15,6 +15,10 @@
 		0AA81111204D3FB100250783 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0AA8110F204D3FB100250783 /* LaunchScreen.storyboard */; };
 		0AB37F1A2051861E009B1D8B /* CatchedPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB37F192051861E009B1D8B /* CatchedPoint.swift */; };
 		1C25CDDD204D82360015C410 /* resistor_model.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1C25CDDC204D82360015C410 /* resistor_model.mlmodel */; };
+		1C764CAE20566C3E009ABBE4 /* OnboardingPager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C764CAD20566C3D009ABBE4 /* OnboardingPager.swift */; };
+		1C764CB420566C72009ABBE4 /* StepZero.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C764CB120566C71009ABBE4 /* StepZero.swift */; };
+		1C764CB520566C72009ABBE4 /* StepTwo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C764CB220566C71009ABBE4 /* StepTwo.swift */; };
+		1C764CB620566C72009ABBE4 /* StepOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C764CB320566C72009ABBE4 /* StepOne.swift */; };
 		1C8D51812051428900B6430D /* AdaptiveThreshold.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C8D51802051428900B6430D /* AdaptiveThreshold.swift */; };
 		1CDD487720558D5A007CF303 /* ManualResistorsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD487620558D5A007CF303 /* ManualResistorsViewController.swift */; };
 		1CDD487920558FDD007CF303 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CDD487820558FDD007CF303 /* InfoViewController.swift */; };
@@ -50,6 +54,10 @@
 		0AA81122204D3FB100250783 /* ResistorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ResistorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AB37F192051861E009B1D8B /* CatchedPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatchedPoint.swift; sourceTree = "<group>"; };
 		1C25CDDC204D82360015C410 /* resistor_model.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = resistor_model.mlmodel; sourceTree = "<group>"; };
+		1C764CAD20566C3D009ABBE4 /* OnboardingPager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPager.swift; sourceTree = "<group>"; };
+		1C764CB120566C71009ABBE4 /* StepZero.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepZero.swift; sourceTree = "<group>"; };
+		1C764CB220566C71009ABBE4 /* StepTwo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepTwo.swift; sourceTree = "<group>"; };
+		1C764CB320566C72009ABBE4 /* StepOne.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepOne.swift; sourceTree = "<group>"; };
 		1C8D51802051428900B6430D /* AdaptiveThreshold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveThreshold.swift; sourceTree = "<group>"; };
 		1CDD487620558D5A007CF303 /* ManualResistorsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualResistorsViewController.swift; sourceTree = "<group>"; };
 		1CDD487820558FDD007CF303 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
@@ -111,6 +119,10 @@
 				0AA81112204D3FB100250783 /* Info.plist */,
 				0AA8110A204D3FB100250783 /* Resistor.xcdatamodeld */,
 				1C8D51802051428900B6430D /* AdaptiveThreshold.swift */,
+				1C764CB320566C72009ABBE4 /* StepOne.swift */,
+				1C764CB220566C71009ABBE4 /* StepTwo.swift */,
+				1C764CB120566C71009ABBE4 /* StepZero.swift */,
+				1C764CAD20566C3D009ABBE4 /* OnboardingPager.swift */,
 				0AB37F192051861E009B1D8B /* CatchedPoint.swift */,
 				1CDD487820558FDD007CF303 /* InfoViewController.swift */,
 			);
@@ -253,9 +265,13 @@
 			files = (
 				1CDD487720558D5A007CF303 /* ManualResistorsViewController.swift in Sources */,
 				1C25CDDD204D82360015C410 /* resistor_model.mlmodel in Sources */,
+				1C764CB620566C72009ABBE4 /* StepOne.swift in Sources */,
 				0AA8110C204D3FB100250783 /* Resistor.xcdatamodeld in Sources */,
 				1C8D51812051428900B6430D /* AdaptiveThreshold.swift in Sources */,
 				0AA81106204D3FB100250783 /* ViewController.swift in Sources */,
+				1C764CB420566C72009ABBE4 /* StepZero.swift in Sources */,
+				1C764CAE20566C3E009ABBE4 /* OnboardingPager.swift in Sources */,
+				1C764CB520566C72009ABBE4 /* StepTwo.swift in Sources */,
 				0AA81104204D3FB100250783 /* AppDelegate.swift in Sources */,
 				1CDD487920558FDD007CF303 /* InfoViewController.swift in Sources */,
 				0AB37F1A2051861E009B1D8B /* CatchedPoint.swift in Sources */,
