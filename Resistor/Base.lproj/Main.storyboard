@@ -204,12 +204,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Ek-ux-yOK" userLabel="Members picker">
-                                <rect key="frame" x="0.0" y="460" width="375" height="125"/>
+                                <rect key="frame" x="0.0" y="460" width="320" height="125"/>
                             </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="4Ek-ux-yOK" firstAttribute="centerX" secondItem="eDV-Fv-hpX" secondAttribute="centerX" id="0lN-cc-vLG"/>
                             <constraint firstItem="FdF-6p-E9D" firstAttribute="centerX" secondItem="bHJ-G7-s8A" secondAttribute="centerX" id="9no-3R-7AM"/>
                             <constraint firstItem="eDV-Fv-hpX" firstAttribute="centerX" secondItem="dUl-5P-TGA" secondAttribute="centerX" id="Aqk-ca-zxZ"/>
                             <constraint firstItem="4Ek-ux-yOK" firstAttribute="top" secondItem="eDV-Fv-hpX" secondAttribute="bottom" constant="8" id="JVO-H3-rOh"/>
@@ -270,7 +269,7 @@
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="256" id="6QI-wu-5LH"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
-                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="textColor" red="0.016804177310000001" green="0.19835099580000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="justified" lineBreakMode="middleTruncation" numberOfLines="15" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pah-Cv-Dsz">

@@ -12,7 +12,8 @@ class InfoViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDa
 	
 	
 
-	@IBOutlet weak var myPicker: UIPickerView!
+
+    @IBOutlet weak var myPicker: UIPickerView!
 	var pickerData:[String] = []
 	override func viewDidLoad() {
         super.viewDidLoad()

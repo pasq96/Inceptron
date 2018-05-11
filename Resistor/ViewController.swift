@@ -6,13 +6,13 @@
 //  Copyright © 2018 Team 5.2. All rights reserved.
 //
 
-import UIKit
-import AVFoundation
-import Vision
-import CoreImage
+import UIKit //fatto
+import AVFoundation //fatto
+import Vision //fatto
+import CoreImage //fatti
 
 
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate { //fatto
     
     @IBOutlet weak var resultImageView: UIView!
     @IBOutlet weak var resultView: UIView!
@@ -37,7 +37,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-    private lazy var captureSession: AVCaptureSession = {
+    private lazy var captureSession: AVCaptureSession = { //fatto
         let session = AVCaptureSession()
         session.sessionPreset = AVCaptureSession.Preset.photo
         guard let backCamera = AVCaptureDevice.default(for: .video),
@@ -46,12 +46,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         session.addInput(input)
         return session
-    }()
+    }() //fatto
     
-    private lazy var cameraLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-    private var device: AVCaptureDevice =  AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)!
+    private lazy var cameraLayer: AVCaptureVideoPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession) //fatto
+    private var device: AVCaptureDevice =  AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .back)! // fatto !
     
-    var videoPreviewLayer:AVCaptureVideoPreviewLayer?
+    var videoPreviewLayer:AVCaptureVideoPreviewLayer? //fatto
+
     var visionRequests = [VNRequest]()
     private let context = CIContext()
     var imageCroppedGreen: CIImage!
@@ -61,18 +62,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     var imWorking = false
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewDidLoad() { //fatto
+        super.viewDidLoad() //fatto
         // Do any additional setup after loading the view, typically from a nib.
         
         //
-        cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
+        cameraLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill //fatto
         // make the camera appear on the screen
         self.cameraView?.layer.addSublayer(self.cameraLayer)
         
-        let output = AVCaptureVideoDataOutput()
-        output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "queue"))
-        captureSession.addOutput(output)
+        let output = AVCaptureVideoDataOutput()//fatto
+        output.setSampleBufferDelegate(self, queue: DispatchQueue(label: "queue"))//fatto
+        captureSession.addOutput(output)//fatto
         
         // Initialize the video preview layer and add it as a sublayer to the viewPreview view's layer.
         /*

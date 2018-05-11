@@ -10,7 +10,7 @@ import UIKit
 
 class ManualResistorViewController: UIViewController, UIPickerViewDelegate,  UIPickerViewDataSource {
 	
-	
+
 
 //	@IBOutlet weak var myLabel: UILabel!
 	@IBOutlet weak var picker1: UIPickerView!
